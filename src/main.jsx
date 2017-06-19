@@ -4,14 +4,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./main.less";
 
-var arr = new Array(4 * 24);
-
-arr.fill(1, 0, 4 * 24);
-
-console.log(arr);
-
 //props should expect full event object
 //this.props.blockCount
+//this.props.name
 class Event extends React.Component{
 	constructor(props){
 		super(props);
@@ -19,8 +14,8 @@ class Event extends React.Component{
 	render(){
 		var _arr = new Array(this.props.blockCount);
 		_arr.fill(1, 0, this.props.blockCount);
-		return(<div className = "event">
-			{arr.map((_, ind) => <QuarterBox key = {ind} fill = "10"/>)}
+		return(<div className = "e-box"><div className = "e-box-name">{this.props.name}</div>
+			{_arr.map((_, ind) => <QuarterBox key = {ind} fill = "10"/>)}
 			</div>
 		);
 	}
@@ -43,10 +38,18 @@ class QuarterBox extends React.Component{
 
 
 class DayBox extends React.Component{
+	render(){
+		return (<div id="d-box">
+			{this.props.dayFill.map((i, ind)=><QuarterBox key = {ind} fill={Math.floor(i * 10)}/>)}
+		</div>);
+	}
+}
+
+class App extends React.Component{
 	constructor(props){
 		super(props);
-		this.calcDayfill = this.calcDayfill.bind(this)
-		this.timerHandler = this.timerHandler.bind(this)
+		this.calcDayfill = this.calcDayfill.bind(this);
+		this.timerHandler = this.timerHandler.bind(this);
 		this.state = {
 			dayFill: this.calcDayfill(),
 			timer: setInterval(this.timerHandler,1000 * 5 )
@@ -65,25 +68,24 @@ class DayBox extends React.Component{
 		return dayFill;
 	}
 	timerHandler(){
-		console.log("run")
 		this.setState({
 			dayFill: this.calcDayfill()
-		})
+		});
 	}
 	render(){
-		return (<div id="d-box">
-			{this.state.dayFill.map((i, ind)=><QuarterBox key = {ind} fill={Math.floor(i * 10)}/>)}
+		return (<div>
+			<DayBox dayFill = {this.state.dayFill}/>
+			<div id = "e-box-container">
+			<Event name = "temp" blockCount = {4}/>
+			<Event name = "temp" blockCount = {8}/>
+			</div>
 		</div>);
 	}
 }
 
-class App extends React.Component{
-	
-}
-
 
 ReactDOM.render(
-	<DayBox/>,
+	<App/>,
 	document.getElementById("react-container")
 );
 

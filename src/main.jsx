@@ -92,7 +92,7 @@ class App extends React.Component {
 			today: new Date(),
 			prevDOY: this.prevDaysOfYear(),
 			futureDOY: this.futureDaysOfYear(),
-			mode: "year"
+			mode: "week"
 		};
 	}
 	calcDayfill() {
@@ -110,7 +110,7 @@ class App extends React.Component {
 	calcWeekFill() {
 		var weekFill = [0, 0, 0, 0, 0, 0, 0];
 		var dayOf = new Date().getDay() - 1;
-		if (dayOf === 0)
+		if (dayOf < 0)
 			dayOf = 6;
 		weekFill[dayOf] = 1;
 		for (var i = dayOf + 1; i < 7; i++)

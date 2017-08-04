@@ -18,6 +18,8 @@ Date.prototype.isSameDateAs = function(pDate) {
 	);
 }
 
+var colors = ["orange", "blue", "black", "red", "green", "white"];
+
 //props should expect full event object
 //this.props.blockCount
 //this.props.name
@@ -60,45 +62,10 @@ class DayBox extends React.Component {
 }
 
 class WeekBox extends React.Component {
-	render() {
-		return (<div className ="w-box">
-			{this.props.weekFill.map((w) => {
-				var day = fullDay;
-
-				if(w == 1)
-					day = this.props.dayFill;
-				else if (w == 2)
-					day = emptyDay;
-				
-				return (
-					<div>
-					<DayBox dayFill = {day}/>
-					<div className = "pad"/>
-					</div>);
-			})}
-			</div>);
-	}
-}
-
-class App extends React.Component {
-	constructor(props) {
-		super(props);
-		this.calcDayfill = this.calcDayfill.bind(this);
-		this.timerHandler = this.timerHandler.bind(this);
-		this.state = {
-			dayFill: this.calcDayfill(),
-			timer: setInterval(this.timerHandler, 1000 * 5),
-			weekFill: this.calcWeekFill(),
-			today: new Date(),
-			prevDOY: this.prevDaysOfYear(),
-			futureDOY: this.futureDaysOfYear(),
-			mode: "week"
-		};
-	}
 	calcDayfill() {
 		var dayFill = new Array(cols * rows);
 		dayFill.fill(1, 0, cols * rows);
-		var d = new Date();
+		var d = this.props.today;
 		var ind = d.getHours() + Math.floor(d.getMinutes() / 60);
 		var portion = Math.floor(d.getMinutes() % 60) / 60;
 		dayFill[ind] = portion;
@@ -109,7 +76,7 @@ class App extends React.Component {
 	}
 	calcWeekFill() {
 		var weekFill = [0, 0, 0, 0, 0, 0, 0];
-		var dayOf = new Date().getDay() - 1;
+		var dayOf = this.props.today.getDay() - 1;
 		if (dayOf < 0)
 			dayOf = 6;
 		weekFill[dayOf] = 1;
@@ -117,50 +84,92 @@ class App extends React.Component {
 			weekFill[i] = 2;
 		return weekFill;
 	}
-	getMonday(d) {
-		d = new Date(d);
-		var day = d.getDay(),
-			diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
-		return new Date(d.setDate(diff));
+	render() {
+		return (<div className ="w-box" id="weekbox">
+			{this.calcWeekFill().map((w, i) => {
+				var day = fullDay;
+
+				if(w == 1)
+					day = this.calcDayfill();
+				else if (w == 2)
+					day = emptyDay;
+				
+				var pad = i == 6 ? null : <div className = "pad"/>;
+
+				return (
+					<div key={i}>
+					<DayBox dayFill = {day}/>
+
+					{pad}
+					</div>);
+			})}
+			</div>);
+	}
+}
+
+class YearBox extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			prevDOY: this.prevDaysOfYear(),
+			futureDOY: this.futureDaysOfYear()
+		};
+
 	}
 	prevDaysOfYear() {
 		var c = [];
 
-		var monday = this.getMonday(new Date());
-		var start = new Date(monday.getFullYear(), 0, 0);
-		var diff = monday - start;
+		var today = this.props.today;
+		var start = new Date(today.getFullYear(), 0, 0);
+		var diff = today - start;
 		var oneDay = 1000 * 60 * 60 * 24;
 		var days = Math.floor(diff / oneDay);
 		for (var i = 0; i < days; i++) {
-			c.push(<QuarterBox fill={10}/>);
+			c.push(<QuarterBox key={i} fill={10}/>);
 		}
 		return c;
 	}
 	futureDaysOfYear() {
 		var c = [];
 
-		var monday = this.getMonday(new Date());
-		monday.setDate(monday.getDate() + 7);
-		var start = new Date(monday.getFullYear() + 1, 0, 0);
-		var diff = start - monday;
+		var today = this.props.today;
+		var start = new Date(today.getFullYear() + 1, 0, 0);
+		var diff = start - today;
 		var oneDay = 1000 * 60 * 60 * 24;
 		var days = Math.floor(diff / oneDay);
+		var t = Math.floor(today / oneDay);
 		for (var i = 0; i < days; i++) {
-			c.push(<QuarterBox fill={0}/>);
+			c.push(<QuarterBox key={i+t} fill={0}/>);
 		}
 		return c;
 	}
+	render() {
+		var a = this.props.today;
+		var todayProg = (a.getHours() * 60 + a.getMinutes()) / (12 * 60);
+		todayProg = Math.floor(todayProg * 100);
+		return (<div id="yearbox">
+		{this.prevDaysOfYear()}
+		<QuarterBox fill={todayProg}/>
+		{this.futureDaysOfYear()}	
+		</div>);
+	}
+
+}
+
+class App extends React.Component {
+	constructor(props) {
+		super(props);
+		this.timerHandler = this.timerHandler.bind(this);
+		this.state = {
+			timer: setInterval(this.timerHandler, 1000 * 10),
+			today: new Date(),
+			mode: "week",
+			colorIndex: parseInt(localStorage.getItem("color"))
+		};
+		console.log(localStorage.getItem("color"))
+	}
 	timerHandler() {
-		this.setState({
-			dayFill: this.calcDayfill(),
-			weekFill: this.calcWeekFill()
-		});
-		if (!this.state.today.isSameDateAs(new Date())) {
-			this.setState({
-				prevDOY: this.prevDaysOfYear(),
-				futureDOY: this.futureDaysOfYear()
-			});
-		}
+		this.setState({ today: new Date() });
 	}
 	toggleMode() {
 		var n = "year";
@@ -171,13 +180,25 @@ class App extends React.Component {
 			mode: n
 		});
 	}
+	toggleColor(){
+		var newInd = (this.state.colorIndex + 1)%(colors.length);
+		this.setState({
+			colorIndex: newInd
+		});
+		localStorage.setItem("color", newInd);
+	}
 	render() {
-		return (<div className = {this.state.mode}>
-			{this.state.prevDOY}
-			<WeekBox dayFill = {this.state.dayFill} weekFill = {this.state.weekFill}/>
-			{this.state.futureDOY}
-			<button onClick={()=>this.toggleMode()}>Thing</button>
-		</div>);
+		return (
+			<div className = {this.state.mode + " " + colors[this.state.colorIndex]}>
+				<WeekBox today={this.state.today}/>
+
+				<button id="switch" onClick={()=>this.toggleMode()}>Toggle view</button>
+				<button id="color" onClick={()=>this.toggleColor()}>Color</button>
+
+				<YearBox today={this.state.today}/>
+
+			</div>
+		);
 	}
 }
 

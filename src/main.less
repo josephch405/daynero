@@ -11,12 +11,54 @@
 	}
 }
 
+.orange .q-box{
+	background-color: #FF6B00;
+}
+
+.blue .q-box{
+	background-color: #5081FF;
+}
+
+.black .q-box{
+	background-color: #343434;
+}
+
+.red .q-box{
+	background-color: #FF4F4F;
+}
+
+.green .q-box{
+	background-color: #83FF7C;
+}
+
+.white .q-box{
+	background-color: #C2C2C2;
+}
+
+
 div {
-	transition: width 10s ease;
+	transition: top .2s ease-out;
+}
+
+body {
+	width: 100vw;
+	height: 100vh;
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
 }
 
 #react-container {
-	padding-top: 16vh;
+	// padding-top: 16vh;
+	.year,
+	.week {
+		position: relative;
+		top: 0vh;
+	}
+	.year {
+		top: -100vh;
+	}
+	.week {}
 
 	.w-box,
 	.w-box>div,
@@ -44,39 +86,31 @@ div {
 		}
 	}
 
+	#yearbox,
+	#weekbox {
+		width: 90vw;
+		height: 100vh;
+		padding-top: 15vh;
+		box-sizing: border-box;
+	}
 
 
-	.year {
+
+	#yearbox {
 		margin: auto;
-		text-align: center;
-		width: 140vh;
+		text-align: center; //width: 140vh;
 		>div {
 			width: 5vh;
 		}
 		.w-box {
 			width: 35vh;
-			.d-box {
-				.q-box {
-					display: none;
-				}
-				width: 5vh;
-				height: 5vh;
-				display: inline-block;
-				border: .2vh white solid;
-				box-sizing: border-box;
-				background-color: #FF6B00;
-				>.inner {
-					background-color: grey;
-					height: 100%;
-				}
-			}
 			.pad {
 				width: 0
 			}
 		}
 	}
 
-	.week {
+	#weekbox {
 		margin: auto;
 		text-align: center;
 		width: auto;
@@ -136,4 +170,16 @@ body {
 
 .fill-10>.inner {
 	width: 100%
+}
+
+#switch {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+}
+
+#color{
+	position: fixed;
+	bottom: 0;
+	left: 0;
 }

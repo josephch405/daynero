@@ -1,26 +1,11 @@
 {
-  // Required
   "manifest_version": 2,
   "name": "Daynero",
   "version": "0.1",
-
-  // Recommended
-  // "default_locale": "en",
+  "default_locale": "en",
   "description": "Time is money. Use it wisely.",
   "icons": {},
-
-  // Pick one (or none)
-  // "browser_action": {...},
-  // "page_action": {...},
-
-  // Optional
   "author": "Jo Chuang",
-  // "background": {
-  //   // Recommended
-  //   "persistent": false
-  // },
-
-  // "background_page": ...,"
   "chrome_url_overrides" : {
     "newtab": "index.html"
   }

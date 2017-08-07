@@ -145,8 +145,8 @@ class YearBox extends React.Component {
 	}
 	render() {
 		var a = this.props.today;
-		var todayProg = (a.getHours() * 60 + a.getMinutes()) / (12 * 60);
-		todayProg = Math.floor(todayProg * 100);
+		var todayProg = (a.getHours() * 60 + a.getMinutes()) / (24 * 60);
+		todayProg = Math.floor(todayProg * 10);
 		return (<div id="yearbox">
 		{this.prevDaysOfYear()}
 		<QuarterBox fill={todayProg}/>
@@ -188,11 +188,12 @@ class App extends React.Component {
 		localStorage.setItem("color", newInd);
 	}
 	render() {
+		var switchText = this.state.mode == "year" ? "View week" : "View Year";
 		return (
 			<div className = {this.state.mode + " " + colors[this.state.colorIndex]}>
 				<WeekBox today={this.state.today}/>
 
-				<button id="switch" onClick={()=>this.toggleMode()}>Toggle view</button>
+				<button id="switch" onClick={()=>this.toggleMode()}>{switchText}</button>
 				<button id="color" onClick={()=>this.toggleColor()}>Color</button>
 
 				<YearBox today={this.state.today}/>

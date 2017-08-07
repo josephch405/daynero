@@ -1,38 +1,65 @@
+body{
+	background-color: #EEE;
+}
+
 .q-box {
 	width: 5vh;
 	height: 5vh;
 	display: inline-block;
-	border: .2vh white solid;
+	border: .2vh #EEE solid;
 	box-sizing: border-box;
 	background-color: #FF6B00;
+	transition: background-color .1s ease-out;
+
 	>.inner {
 		background-color: grey;
+		&:hover{
+			background-color: #696969;
+		}
 		height: 100%;
 	}
 }
 
 .orange .q-box{
 	background-color: #FF6B00;
+	&:hover{
+		background-color: #C05000;
+	}
 }
 
 .blue .q-box{
 	background-color: #5081FF;
+	&:hover{
+		background-color: #2C65F8;
+	}
 }
 
 .black .q-box{
 	background-color: #343434;
+	&:hover{
+		background-color: #000000;
+	}
 }
 
 .red .q-box{
 	background-color: #FF4F4F;
+	&:hover{
+		background-color: #FF0000;
+	}
 }
 
 .green .q-box{
 	background-color: #83FF7C;
+	&:hover{
+		background-color: #0DFF00;
+	}
 }
 
 .white .q-box{
 	background-color: #C2C2C2;
+	&:hover{
+		background-color: #919191;
+	}
 }
 
 
@@ -170,6 +197,26 @@ body {
 
 .fill-10>.inner {
 	width: 100%
+}
+
+button {
+	height: 6vh;
+	width: 8vw;
+	border: 0;
+	border-radius: 0;
+	color: grey;
+	font-family: times;
+	font-size: 2.2vh;
+	background-color: white;
+	box-shadow: 0 0 3vh 0 rgba(0,0,0,.1);
+	transition: background-color .1s ease-out, height .1s ease-out;
+	&:hover{
+		background-color: #EEEEEE;
+		height: 8vh;
+	}
+	&:focus{
+		outline: none;
+	}
 }
 
 #switch {

@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "Daynero",
+  "name": "Daynero - Time is Money",
+  "short_name": "Daynero",
   "version": "0.1",
-  "default_locale": "en",
   "description": "Time is money. Use it wisely.",
-  "icons": {},
+  "icons": {"128": "icon_128.png"},
   "author": "Jo Chuang",
   "chrome_url_overrides" : {
     "newtab": "index.html"

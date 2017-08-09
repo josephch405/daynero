@@ -74,18 +74,27 @@ class WeekBox extends React.Component {
 		}
 		return dayFill;
 	}
+	getDay(){
+		var d = this.props.today.getDay() - 1;
+		if (d < 0)
+			d = 6;
+		return d;
+	}
 	calcWeekFill() {
 		var weekFill = [0, 0, 0, 0, 0, 0, 0];
-		var dayOf = this.props.today.getDay() - 1;
-		if (dayOf < 0)
-			dayOf = 6;
+		var dayOf = this.getDay();
 		weekFill[dayOf] = 1;
 		for (var i = dayOf + 1; i < 7; i++)
 			weekFill[i] = 2;
 		return weekFill;
 	}
 	render() {
+		var day = this.getDay();
+		var hour = this.props.today.getHours();
+		var min = this.props.today.getMinutes();
+		var percent = Math.floor((day * 24 * 60 + hour * 60 + min) * 1000/ (7 * 24 * 60)) / 10;
 		return (<div className ="w-box" id="weekbox">
+			<div className = "percent-display">Week is {percent}% over</div>
 			{this.calcWeekFill().map((w, i) => {
 				var day = fullDay;
 
@@ -114,16 +123,18 @@ class YearBox extends React.Component {
 			prevDOY: this.prevDaysOfYear(),
 			futureDOY: this.futureDaysOfYear()
 		};
-
 	}
-	prevDaysOfYear() {
-		var c = [];
-
+	getDayOfYear(){
 		var today = this.props.today;
 		var start = new Date(today.getFullYear(), 0, 0);
 		var diff = today - start;
 		var oneDay = 1000 * 60 * 60 * 24;
-		var days = Math.floor(diff / oneDay);
+		return Math.floor(diff / oneDay);
+	}
+	prevDaysOfYear() {
+		var c = [];
+		
+		var days = this.getDayOfYear();
 		for (var i = 0; i < days; i++) {
 			c.push(<QuarterBox key={i} fill={10}/>);
 		}
@@ -143,11 +154,23 @@ class YearBox extends React.Component {
 		}
 		return c;
 	}
+	daysInYear() { 
+		return this.isLeapYear(this.props.today.getFullYear()) ? 366 : 365;
+	}
+	isLeapYear(year) {
+		return year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0);
+	}
 	render() {
 		var a = this.props.today;
 		var todayProg = (a.getHours() * 60 + a.getMinutes()) / (24 * 60);
 		todayProg = Math.floor(todayProg * 10);
+
+		var day = this.getDayOfYear();
+		var hour = this.props.today.getHours();
+		var percent = Math.floor((day * 24 + hour) * 1000/ (this.daysInYear() * 24)) / 10;
+
 		return (<div id="yearbox">
+			<div className = "percent-display">Year is {percent}% over</div>
 		{this.prevDaysOfYear()}
 		<QuarterBox fill={todayProg}/>
 		{this.futureDaysOfYear()}	
@@ -159,12 +182,13 @@ class YearBox extends React.Component {
 class App extends React.Component {
 	constructor(props) {
 		super(props);
+		var a = parseInt(localStorage.getItem("color"))
 		this.timerHandler = this.timerHandler.bind(this);
 		this.state = {
 			timer: setInterval(this.timerHandler, 1000 * 10),
 			today: new Date(),
 			mode: "week",
-			colorIndex: parseInt(localStorage.getItem("color"))
+			colorIndex: a ? a : 0
 		};
 		console.log(localStorage.getItem("color"))
 	}

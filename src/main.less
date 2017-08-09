@@ -1,3 +1,8 @@
+@font-face {
+    font-family: Open Sans;
+    src: url(OpenSans-Regular.ttf);
+}
+
 body{
 	background-color: #EEE;
 }
@@ -117,8 +122,17 @@ body {
 	#weekbox {
 		width: 90vw;
 		height: 100vh;
-		padding-top: 15vh;
+		padding-top: 5vh;
 		box-sizing: border-box;
+	}
+
+	.percent-display{
+		width: 100%;
+		box-sizing: border-box;
+		font-size: 5vh;
+		font-family: Open Sans;
+		color: grey;
+		padding: 5vh;
 	}
 
 
@@ -126,7 +140,7 @@ body {
 	#yearbox {
 		margin: auto;
 		text-align: center; //width: 140vh;
-		>div {
+		>.q-box {
 			width: 5vh;
 		}
 		.w-box {
@@ -205,7 +219,7 @@ button {
 	border: 0;
 	border-radius: 0;
 	color: grey;
-	font-family: times;
+	font-family: Open Sans;
 	font-size: 2.2vh;
 	background-color: white;
 	box-shadow: 0 0 3vh 0 rgba(0,0,0,.1);
